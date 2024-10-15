@@ -26,3 +26,5 @@ class CompleteTaskTestCase(TestCase):
         self.task.save()
         completed_task = Task.objects.get(name="Incomplete Task")
         self.assertTrue(completed_task.completed)
+        
+    #bhumik test case scenario #2
