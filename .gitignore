@@ -1,2 +1,5 @@
 /myproject/__pycache__/
 /todo/__pycache__/
+
+#ignore virtual environment
+/venv

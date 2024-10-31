@@ -1,0 +1,115 @@
+/* Reset styles*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Global body styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Main container styling */
+.container {
+    background: #fff;
+    padding: 60px; 
+    border-radius: 12px; 
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15); 
+    width: 100%;
+    max-width: 600px; 
+    text-align: center;
+}
+
+/* Heading styling */
+h2 {
+    font-size: 32px; 
+    color: #333;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* Paragraph styling */
+p {
+    font-size: 18px;
+    color: #666;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+/* Form styling */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; 
+}
+
+form div {
+    text-align: left; 
+}
+
+/* Label styling */
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #666;
+}
+
+/* Input field styling */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+/* Input field focus effect */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #333;
+}
+
+/* Button styling for form and links */
+button, .btn {
+    padding: 15px 30px; 
+    font-size: 18px; 
+    color: #fff;
+    background-color: #333;
+    border: none;
+    border-radius: 8px; 
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* Button hover effect */
+button:hover, .btn:hover {
+    background-color: #555;
+}
+
+/* Link styling */
+a {
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #555;
+}
