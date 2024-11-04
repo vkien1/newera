@@ -1,0 +1,87 @@
+<!-- screens/dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Era - Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <!-- Link to external stylesheet -->
+</head>
+
+<body>
+    <!-- Header Bar -->
+    <header>
+        <div class="header-left">
+            <h1>New Era</h1>
+        </div>
+        <div class="header-right">
+            <span>Welcome, {{ session['username'] }}!</span>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Sidebar with navigation links -->
+        <aside class="sidebar">
+            <div class="menu-item">
+                <a href="{{ url_for('dashboard') }}" class="menu-button">Home</a>
+            </div>
+            <div class="dropdown">
+                <button class="dropdown-button">
+                    Other Pages!
+                    <span class="arrow">&#9662;</span>
+                </button>
+                <ul class="dropdown-content">
+                    <li><a href="#">Add</a></li>
+                    <li><a href="#">Add</a></li>
+                    <li><a href="#">Add</a></li>
+                    <li><a href="#">Add</a></li>
+                </ul>
+            </div>
+            <div class="menu-item">
+                <a href="#" class="menu-button">Contact Me</a>
+            </div>
+        </aside>
+
+        <!-- Main content area -->
+        <main class="content">
+            <div class="content-header">
+                <h2>Main Content</h2>
+                <div id="current-time"></div>
+            </div>
+            <p>This is the main content area of the dashboard.</p>
+        </main>
+
+        <!-- Right sidebar for additional information -->
+        <aside class="right-sidebar">
+            <h2>About New Era</h2>
+            <p>New Era is a platform to bring communities together. Set tasks, explore them, and follow through with
+                them.</p>
+        </aside>
+    </div>
+
+    <script>
+        // Function to update current time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            document.getElementById('current-time').textContent = `Current Time: ${timeString}`;
+        }
+
+        // Initial time update
+        updateTime();
+
+        // Update time every second
+        setInterval(updateTime, 1000);
+
+        // Dropdown functionality for Communities section
+        document.querySelector('.dropdown-button').addEventListener('click', function () {
+            const dropdown = document.querySelector('.dropdown');
+            dropdown.classList.toggle('open'); // Toggle the 'open' class to show/hide content and rotate arrow
+        });
+    </script>
+</body>
+
+</html>
