@@ -1,0 +1,24 @@
+
+/* Center align header text */
+header {
+    text-align: center;
+    padding: 20px 50px; /* Add padding for spacing */
+    margin-bottom: 20px;
+}
+
+/* Styling for labels */
+label {
+    text-align: left;
+    font-weight: bold;
+    margin-bottom: 0.1em;
+    margin-top: 1%;
+}
+/* Profile picture styling */
+.profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%; /* Circular shape */
+    object-fit: cover; /* Ensures image fills the circle */
+    display: block;
+    margin: 0 auto 20px; /* Center the image and add bottom margin */
+}

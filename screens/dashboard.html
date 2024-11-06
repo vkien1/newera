@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Era - Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
-    <link id="darkmode-css" rel="stylesheet" href="" disabled> <!-- Placeholder for dark mode CSS -->
+    <link id="darkmode-css" rel="stylesheet" href="{{ url_for('static', filename='darkmode.css') }}" disabled>
+    <!-- Placeholder for dark mode CSS -->
 </head>
 
 <body>
@@ -16,7 +17,13 @@
             <h1>New Era</h1>
         </div>
         <div class="header-right">
+            {% if session['user_id'] %}
             <span>Welcome, {{ session['username'] }}!</span>
+            {% if user.profile_pic %}
+            <img src="{{ url_for('static', filename=user.profile_pic.replace('\\', '/')) }}" alt="Profile Picture"
+                class="profile-pic">
+            {% endif %}
+            {% endif %}
             <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
         </div>
     </header>
@@ -34,8 +41,11 @@
                 </button>
                 <ul class="dropdown-content">
                     <li><a href="#" onclick="toggleTheme()">Toggle Light/Dark Mode</a></li>
-                    <li><a href="#">Other Option</a></li>
+                    <li></li>
                 </ul>
+            </div>
+            <div class="menu-item">
+                <a href="{{ url_for('account') }}" class="menu-button">User Account</a>
             </div>
             <div class="menu-item">
                 <a href="#" class="menu-button">Contact Me</a>
@@ -63,9 +73,11 @@
         // Load theme from local storage
         function loadTheme() {
             const theme = localStorage.getItem('theme');
+            const darkmodeCss = document.getElementById('darkmode-css');
             if (theme === 'dark') {
-                document.getElementById('darkmode-css').setAttribute('href', "{{ url_for('static', filename='darkmode.css') }}");
-                document.getElementById('darkmode-css').disabled = false;
+                darkmodeCss.disabled = false;
+            } else {
+                darkmodeCss.disabled = true;
             }
         }
 
@@ -73,7 +85,6 @@
         function toggleTheme() {
             const darkmodeCss = document.getElementById('darkmode-css');
             if (darkmodeCss.disabled) {
-                darkmodeCss.setAttribute('href', "{{ url_for('static', filename='darkmode.css') }}");
                 darkmodeCss.disabled = false;
                 localStorage.setItem('theme', 'dark');
             } else {
