@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, flash, redirect, url_for, ses
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import sqlite3
+from datetime import timedelta
 
 app = Flask(__name__, template_folder='screens')
 app.secret_key = os.urandom(24)  # Secret key for sessions and flash messages
@@ -41,6 +42,7 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
+        remember = 'remember' in request.form  # Check if 'Remember Me' is checked
 
         conn = sqlite3.connect('database/users.db')  # Updated path
         cursor = conn.cursor()
@@ -53,11 +55,22 @@ def login():
             session['user_id'] = user[0]       # Store user ID in session
             session['username'] = user[1]      # Store username in session
             flash('Login successful!', 'success')
+            
+            # Set session lifetime based on 'Remember Me' checkbox
+            if remember:
+                session.permanent = True
+                app.permanent_session_lifetime = timedelta(days=30)  # Cookie lasts for 30 days
+            else:
+                session.permanent = False
+            
             return redirect(url_for('dashboard'))  # Redirect to dashboard after login
         else:
             flash('Login failed. Please check your email and password.', 'error')
 
     return render_template('login.html')
+
+# To configure how long the user stays login for 
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
 
 # Dashboard route to display the dashboard
 @app.route('/dashboard')
