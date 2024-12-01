@@ -1,5 +1,7 @@
 /myproject/__pycache__/
 /todo/__pycache__/
+/static/uploads/*
+/database/users.db
 
 #ignore virtual environment
 /venv
