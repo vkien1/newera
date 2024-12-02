@@ -21,13 +21,22 @@ def allowed_file(filename):
 
 # Database setup for adding the profile_pic column if it doesn't exist
 def initialize_database():
-    """Ensure the users table has a profile_pic column."""
+    """Ensure the users table has a profile_pic column and tasks table exists."""
     conn = sqlite3.connect('database/users.db')
     cursor = conn.cursor()
     cursor.execute("PRAGMA table_info(users)")
     columns = [column[1] for column in cursor.fetchall()]
     if 'profile_pic' not in columns:
         cursor.execute('ALTER TABLE users ADD COLUMN profile_pic TEXT')
+    
+    # Create tasks table if it doesn't exist
+    cursor.execute('''CREATE TABLE IF NOT EXISTS tasks (
+                      id INTEGER PRIMARY KEY AUTOINCREMENT,
+                      user_id INTEGER,
+                      title TEXT NOT NULL,
+                      due_date TEXT,
+                      status TEXT DEFAULT 'Pending',
+                      FOREIGN KEY(user_id) REFERENCES users(id))''')
     conn.commit()
     conn.close()
 
@@ -94,13 +103,17 @@ def login():
     return render_template('login.html')
 
 # Dashboard Route
-@app.route('/dashboard')
+@app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     if 'user_id' in session:
+        user_id = session['user_id']
         conn = sqlite3.connect('database/users.db')
         cursor = conn.cursor()
-        cursor.execute('SELECT username, profile_pic FROM users WHERE id = ?', (session['user_id'],))
+        cursor.execute('SELECT username, profile_pic FROM users WHERE id = ?', (user_id,))
         user_data = cursor.fetchone()
+
+        cursor.execute('SELECT * FROM tasks WHERE user_id = ?', (user_id,))
+        tasks = cursor.fetchall()
         conn.close()
         
         if user_data:
@@ -108,9 +121,67 @@ def dashboard():
         else:
             user = {'username': session['username'], 'profile_pic': None}
 
-        return render_template('dashboard.html', user=user)
+        return render_template('dashboard.html', user=user, tasks=tasks)
     else:
         flash('Please log in to access the dashboard.', 'error')
+        return redirect(url_for('login'))
+
+# Route to add a new task
+@app.route('/add_task', methods=['POST'])
+def add_task():
+    if 'user_id' in session:
+        user_id = session['user_id']
+        title = request.form['title']
+        due_date = request.form['due_date']
+
+        conn = sqlite3.connect('database/users.db')
+        cursor = conn.cursor()
+        cursor.execute('INSERT INTO tasks (user_id, title, due_date) VALUES (?, ?, ?)',
+                       (user_id, title, due_date))
+        conn.commit()
+        conn.close()
+
+        flash('Task added successfully!', 'success')
+        return redirect(url_for('dashboard'))
+    else:
+        flash('Please log in to add tasks.', 'error')
+        return redirect(url_for('login'))
+
+# Route to delete a task
+@app.route('/delete_task/<int:task_id>', methods=['POST'])
+def delete_task(task_id):
+    if 'user_id' in session:
+        conn = sqlite3.connect('database/users.db')
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM tasks WHERE id = ? AND user_id = ?', (task_id, session['user_id']))
+        conn.commit()
+        conn.close()
+
+        flash('Task deleted successfully!', 'success')
+        return redirect(url_for('dashboard'))
+    else:
+        flash('Please log in to delete tasks.', 'error')
+        return redirect(url_for('login'))
+
+# Route to edit a task
+@app.route('/edit_task/<int:task_id>', methods=['POST'])
+def edit_task(task_id):
+    if 'user_id' in session:
+        title = request.form['title']
+        due_date = request.form['due_date']
+        status = request.form['status']
+
+        conn = sqlite3.connect('database/users.db')
+        cursor = conn.cursor()
+        cursor.execute('UPDATE tasks SET title = ?, due_date = ?, status = ? WHERE id = ? AND user_id = ?',
+                       (title, due_date, status, task_id, session['user_id']))
+        conn.commit()
+        conn.close()
+
+        flash('Task updated successfully!', 'success')
+        return redirect(url_for('dashboard'))
+    else:
+        flash('Please log in to edit tasks.', 'error')
         return redirect(url_for('login'))
 
 # Account settings route
@@ -169,7 +240,6 @@ def account():
 
     return render_template('account.html', user=user)
 
-
 # Logout route to handle user logout
 @app.route('/logout')
 def logout():
@@ -192,10 +262,3 @@ if __name__ == '__main__':
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
         os.makedirs(app.config['UPLOAD_FOLDER'])
     app.run(debug=True)
-
-# Add Task
-
-# Delete Task
-
-# Edit Task
-
