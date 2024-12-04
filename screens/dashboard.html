@@ -46,9 +46,6 @@
             <div class="menu-item">
                 <a href="{{ url_for('account') }}" class="menu-button">User Account</a>
             </div>
-            <div class="menu-item">
-                <a href="#" class="menu-button">Contact Me</a>
-            </div>
         </aside>
 
         <!-- Main content area -->
@@ -74,18 +71,22 @@
                         <span class="task-name">{{ task[2] }} (Due: {{ task[3] }})</span>
                         <div class="task-buttons">
                             <!-- Edit Task Form -->
-                            <form action="{{ url_for('edit_task', task_id=task[0]) }}" method="POST" class="task-form-inline">
+                            <form action="{{ url_for('edit_task', task_id=task[0]) }}" method="POST"
+                                class="task-form-inline">
                                 <input type="text" name="title" value="{{ task[2] }}" required>
                                 <input type="date" name="due_date" value="{{ task[3] }}">
                                 <select name="status">
-                                    <option value="Pending" {% if task[4] == 'Pending' %}selected{% endif %}>Pending</option>
-                                    <option value="Completed" {% if task[4] == 'Completed' %}selected{% endif %}>Completed</option>
+                                    <option value="Pending" {% if task[4]=='Pending' %}selected{% endif %}>Pending
+                                    </option>
+                                    <option value="Completed" {% if task[4]=='Completed' %}selected{% endif %}>Completed
+                                    </option>
                                 </select>
                                 <button type="submit" class="task-edit-button">Edit</button>
                             </form>
 
                             <!-- Delete Task Form -->
-                            <form action="{{ url_for('delete_task', task_id=task[0]) }}" method="POST" class="task-form-inline">
+                            <form action="{{ url_for('delete_task', task_id=task[0]) }}" method="POST"
+                                class="task-form-inline">
                                 <button type="submit" class="task-delete-button">Delete</button>
                             </form>
                         </div>
@@ -98,7 +99,8 @@
         <!-- Right sidebar for additional information -->
         <aside class="right-sidebar">
             <h2>About New Era</h2>
-            <p>New Era is a platform to bring communities together. Set tasks, explore them, and follow through with them.</p>
+            <p>New Era is a platform to bring communities together. Set tasks, explore them, and follow through with
+                them.</p>
         </aside>
     </div>
 
